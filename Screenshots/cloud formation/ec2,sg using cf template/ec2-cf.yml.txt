@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create an EC2 instance
+
+Resources:
+  MyEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties: 
+      InstanceType: t2.micro
+      ImageId: ami-0f58b397bc5c1f2e8 
+      SecurityGroups: 
+        - !Ref MyInstanceSecurityGroup
+      Tags:
+        - Key: Name
+          Value: MyEC2Instance
+
+  MyInstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: '0.0.0.0/0'
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref MyEC2Instance
+  PublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt MyEC2Instance.PublicIp
+  AvailabilityZone:
+    Description: Availability Zone of the newly created EC2 instance
+    Value: !GetAtt MyEC2Instance.AvailabilityZone
